@@ -1,0 +1,41 @@
+﻿@model IEnumerable<My_Car_rental.Models.Car>
+
+@{
+    ViewData["Title"] = "Cars";
+}
+
+<h1 class="mb-4">Cars</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Brand)</th>
+            <th>@Html.DisplayNameFor(model => model.Model)</th>
+            <th>@Html.DisplayNameFor(model => model.Year)</th>
+            <th>@Html.DisplayNameFor(model => model.Status)</th>
+            <th>@Html.DisplayNameFor(model => model.IsAvailable)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(m => car.Brand)</td>
+                <td>@Html.DisplayFor(m => car.Model)</td>
+                <td>@Html.DisplayFor(m => car.Year)</td>
+                <td>@Html.DisplayFor(m => car.Status)</td>
+                <td>@Html.DisplayFor(m => car.IsAvailable)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@car.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@car.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@car.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

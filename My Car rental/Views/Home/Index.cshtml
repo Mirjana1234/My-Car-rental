@@ -1,0 +1,115 @@
+﻿@{
+    ViewData["Title"] = "Welcome";
+}
+
+<style>
+    .hero-section {
+        background: url('/images/homepage_bg.jpg') center/cover no-repeat;
+        min-height: 100vh;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 2rem;
+    }
+
+    .overlay-container {
+        background-color: rgba(0, 0, 0, 0.55);
+        border-radius: 12px;
+        padding: 3rem;
+        max-width: 1200px;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .welcome-message, .booking-form {
+        flex: 1 1 45%;
+    }
+
+        .welcome-message h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+        }
+
+        .welcome-message p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-top: 1rem;
+        }
+
+        .booking-form input,
+        .booking-form select {
+            margin-bottom: 1rem;
+        }
+
+        .booking-form label {
+            font-weight: 600;
+        }
+
+    .btn-search {
+        margin-top: 1rem;
+        width: 100%;
+    }
+
+    .btn-explore {
+        margin-top: 2rem;
+    }
+
+    @@media (max-width: 768px) {
+        .overlay-container {
+            flex-direction: column;
+            padding: 2rem;
+        }
+    }
+</style>
+
+@if (User.IsInRole("Admin"))
+{
+    <a href="/Cars/Create" class="btn btn-primary">Create New</a>
+}
+
+<div class="hero-section">
+    <div class="overlay-container text-white">
+        <div class="welcome-message">
+            <h1>Welcome to My Car Rental</h1>
+            <p>
+                Whether you're seeking a thrilling sports car, a family-friendly SUV, or a compact urban vehicle — we have the perfect car for your journey.
+                Fast. Reliable. Stylish.
+            </p>
+            <a class="btn btn-light btn-lg btn-explore" href="/Cars">Explore Our Cars</a>
+        </div>
+
+        <div class="booking-form">
+            <form method="get" action="/Cars">
+                <div class="form-group">
+                    <label for="pickup">Pick-up Location</label>
+                    <input type="text" class="form-control" id="pickup" name="pickupLocation" placeholder="e.g. Malmö Central Station" />
+                </div>
+
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="returnDifferent" name="returnDifferent" />
+                    <label class="form-check-label" for="returnDifferent">Return to a different location</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="pickupDate">Pick-up Date & Time</label>
+                    <input type="datetime-local" class="form-control" id="pickupDate" name="pickupDate" />
+                </div>
+
+                <div class="form-group">
+                    <label for="returnDate">Return Date & Time</label>
+                    <input type="datetime-local" class="form-control" id="returnDate" name="returnDate" />
+                </div>
+
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="ageCheck" name="ageCheck" checked />
+                    <label class="form-check-label" for="ageCheck">Driver is between 30–65 years old</label>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-search">Search</button>
+            </form>
+        </div>
+    </div>
+</div>

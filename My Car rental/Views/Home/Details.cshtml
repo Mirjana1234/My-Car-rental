@@ -1,0 +1,47 @@
+﻿@model My_Car_rental.Models.Car
+
+@{
+    ViewData["Title"] = "Car Details";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <img src="@Model.ImageUrl" alt="@Model.Brand @Model.Model" class="img-fluid rounded shadow-sm" style="max-height: 400px; object-fit: cover;">
+        </div>
+        <div class="col-md-6">
+            <h2>@Model.Brand @Model.Model</h2>
+            <hr />
+            <h4>Description</h4>
+            <p>@Model.Description</p>
+
+            <h4>Specifications</h4>
+            <ul>
+                <li><strong>Price per day:</strong> @Model.PricePerDay.ToString("C")</li>
+                <li><strong>Transmission:</strong> @Model.Transmission</li>
+                <li><strong>Fuel Type:</strong> @Model.FuelType</li>
+                <li><strong>Seats:</strong> @Model.Seats</li>
+                <li><strong>Color:</strong> @Model.Color</li>
+            </ul>
+            <p><strong>Year:</strong> @Model.Year</p>
+            <p>
+                <strong>Status:</strong>
+                @if (Model.IsAvailable)
+                {
+                    <span class="text-success fw-bold">Available </span>
+                }
+                else
+                {
+                    <span class="text-danger fw-bold">Booked </span>
+                }
+            </p>
+            <div class="mt-4">
+                @if (Model.IsAvailable)
+                {
+                    <a asp-action="Book" asp-route-id="@Model.Id" class="btn btn-primary me-2">Book Now</a>
+                }
+                <a asp-action="Cars" class="btn btn-outline-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

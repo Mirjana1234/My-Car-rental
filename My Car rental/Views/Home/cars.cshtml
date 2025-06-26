@@ -1,0 +1,46 @@
+﻿@model IEnumerable<My_Car_rental.Models.Car>
+
+@{
+    ViewData["Title"] = "Available Cars";
+}
+
+<h2 class="mb-4">Choose Your Ride</h2>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var car in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <img src="@car.ImageUrl" alt="@car.Brand @car.Model" class="card-img-top" style="height: 200px; object-fit: cover;">
+                
+
+                <div class="card-body">
+                    <h5 class="card-title">@car.Brand @car.Model</h5>
+                    <p class="card-text">Year: @car.Year</p>
+                    <p class="card-text">
+                        Status:
+                        @if (car.IsAvailable)
+                        {
+                            <span class="text-success fw-bold">Available</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger fw-bold">Booked</span>
+                        }
+                    </p>
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-action="Details" asp-route-id="@car.Id" class="btn btn-info btn-sm me-1">Details</a>
+                    @if (car.IsAvailable)
+                    {
+                        <a asp-action="Book" asp-route-id="@car.Id" class="btn btn-primary btn-sm">Book Now</a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary btn-sm" disabled>Unavailable</button>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
