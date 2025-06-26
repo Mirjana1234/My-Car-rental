@@ -63,6 +63,64 @@
             padding: 2rem;
         }
     }
+
+    .pickup-info-section {
+        background: #f5f7fa;
+        padding: 3rem 0 2rem 0;
+        margin-top: 0;
+    }
+    .pickup-info-title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        color: #222;
+        text-align: center;
+    }
+    .pickup-info-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .pickup-info-item {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        padding: 2rem 1.5rem;
+        flex: 1 1 220px;
+        min-width: 220px;
+        max-width: 260px;
+        text-align: center;
+    }
+    .pickup-info-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #007bff;
+    }
+    .pickup-info-item h5 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #222;
+    }
+    .pickup-info-item p {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 0.5rem;
+    }
+    .pickup-info-item a {
+        color: #007bff;
+        text-decoration: underline;
+        font-size: 0.97rem;
+    }
+    @@media (max-width: 900px) {
+        .pickup-info-grid {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
 </style>
 
 @if (User.IsInRole("Admin"))
@@ -78,11 +136,11 @@
                 Whether you're seeking a thrilling sports car, a family-friendly SUV, or a compact urban vehicle — we have the perfect car for your journey.
                 Fast. Reliable. Stylish.
             </p>
-            <a class="btn btn-light btn-lg btn-explore" href="/Cars">Explore Our Cars</a>
+            <a class="btn btn-light btn-lg btn-explore" href="/Home/Cars">Explore Our Cars</a>
         </div>
 
         <div class="booking-form">
-            <form method="get" action="/Cars">
+            <form method="get" action="/Home/Cars">
                 <div class="form-group">
                     <label for="pickup">Pick-up Location</label>
                     <input type="text" class="form-control" id="pickup" name="pickupLocation" placeholder="e.g. Malmö Central Station" />
@@ -110,6 +168,37 @@
 
                 <button type="submit" class="btn btn-success btn-search">Search</button>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- What you need to pick up the car section -->
+<div class="pickup-info-section">
+    <div class="pickup-info-title">What do you need to pick up the car?</div>
+    <div class="pickup-info-grid">
+        <div class="pickup-info-item">
+            <div class="pickup-info-icon">&#128100;</div>
+            <h5>Driver's License</h5>
+            <p>A valid driver's license in the name of the main driver.</p>
+            <a href="#">What type of driver's license do I need?</a>
+        </div>
+        <div class="pickup-info-item">
+            <div class="pickup-info-icon">&#128179;</div>
+            <h5>Credit Card</h5>
+            <p>A credit card in the name of the main driver with sufficient funds.</p>
+            <a href="#">I don't have a credit card — can I still rent a car?</a>
+        </div>
+        <div class="pickup-info-item">
+            <div class="pickup-info-icon">&#127758;</div>
+            <h5>Identification</h5>
+            <p>A passport or other form of identification.</p>
+            <a href="#">Will I need my passport to pick up a car?</a>
+        </div>
+        <div class="pickup-info-item">
+            <div class="pickup-info-icon">&#128241;</div>
+            <h5>Voucher</h5>
+            <p>A printed Voucher or an e-Voucher, where available.</p>
+            <a href="#">What is a voucher and where can I find it?</a>
         </div>
     </div>
 </div>

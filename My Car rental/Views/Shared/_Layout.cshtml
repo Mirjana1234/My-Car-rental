@@ -10,49 +10,43 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        @using Microsoft.AspNetCore.Identity
+        @using My_Car_rental.Areas.Identity.Data
+        @inject SignInManager<My_Car_rentalUser> SignInManager
+        @inject UserManager<My_Car_rentalUser> UserManager
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">My_Car_rental</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Cars">Cars</a>
-                        </li>
-                    </ul>
+                <!-- Logo on the left -->
+                <a class="navbar-brand d-flex align-items-center" href="/">
+                    <img src="/images/logo.png" alt="Logo" style="height:80px; width:auto;">
+                </a>
 
-                    <!-- Login/Logout section -->
+                <!-- Centered navigation -->
+                <div class="mx-auto">
                     <ul class="navbar-nav">
-                        @if (User.Identity != null && User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <span class="nav-link text-dark">Hello, @User.Identity.Name!</span>
-                            </li>
-                            <li class="nav-item">
-                                <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="form-inline">
-                                    <button type="submit" class="btn btn-link nav-link">Logout</button>
-                                </form>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-                            </li>
-                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-bold" style="font-size:1.15rem; letter-spacing:0.5px;" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-bold" style="font-size:1.15rem; letter-spacing:0.5px;" asp-controller="Home" asp-action="Cars">Cars</a>
+                        </li>
                     </ul>
+                </div>
+
+                <!-- Login/Register on the right -->
+                <div class="d-flex">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <span class="navbar-text me-2">Hello, @UserManager.GetUserName(User)!</span>
+                        <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-secondary rounded-pill ms-2" style="background-color:#f1f1f1; color:#333; border:none;">Logout</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="btn rounded-pill me-2" style="background-color:#f1f1f1; color:#333; border:none;" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                        <a class="btn rounded-pill" style="background-color:#f1f1f1; color:#333; border:none;" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                    }
                 </div>
             </div>
         </nav>

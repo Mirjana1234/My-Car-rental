@@ -17,6 +17,7 @@ namespace My_Car_rental.Data
 
         // Add your own DbSet<Car> so EF can generate a Cars table
         public DbSet<Car> Cars { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
 
         // Override OnModelCreating to ensure correct Identity configuration
         protected override void OnModelCreating(ModelBuilder builder)

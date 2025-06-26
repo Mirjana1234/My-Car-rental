@@ -1,7 +1,9 @@
 ﻿@model My_Car_rental.Models.Car
+@inject Microsoft.AspNetCore.Identity.UserManager<My_Car_rental.Areas.Identity.Data.My_Car_rentalUser> UserManager
 
 @{
     ViewData["Title"] = "Car Details";
+    var userEmail = User.Identity.IsAuthenticated ? UserManager.GetUserName(User) : "";
 }
 
 <div class="container mt-5">
@@ -38,10 +40,79 @@
             <div class="mt-4">
                 @if (Model.IsAvailable)
                 {
-                    <a asp-action="Book" asp-route-id="@Model.Id" class="btn btn-primary me-2">Book Now</a>
+                    <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#bookingModal-@Model.Id">Book Now</button>
                 }
                 <a asp-action="Cars" class="btn btn-outline-secondary">Back to List</a>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Booking Modal -->
+@if (Model.IsAvailable)
+{
+    <div class="modal fade" id="bookingModal-@Model.Id" tabindex="-1" aria-labelledby="bookingModalLabel-@Model.Id" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="/Home/BookModal">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bookingModalLabel-@Model.Id">Book @Model.Brand @Model.Model</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="CarId" value="@Model.Id" />
+                        <div class="mb-3">
+                            <label for="email-@Model.Id" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="email-@Model.Id" name="UserEmail" value="@userEmail" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="startDate-@Model.Id" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="startDate-@Model.Id" name="StartDate" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="endDate-@Model.Id" class="form-label">End Date</label>
+                            <input type="date" class="form-control" id="endDate-@Model.Id" name="EndDate" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Price per day</label>
+                            <input type="text" class="form-control" value="@Model.PricePerDay.ToString("C")" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Total Price</label>
+                            <input type="text" class="form-control total-price" id="totalPrice-@Model.Id" name="TotalPrice" value="@Model.PricePerDay.ToString("C")" readonly />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Confirm Booking</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        var startDateInput = document.getElementById('startDate-@Model.Id');
+        var endDateInput = document.getElementById('endDate-@Model.Id');
+        var totalPriceInput = document.getElementById('totalPrice-@Model.Id');
+        var pricePerDay = parseFloat(document.querySelector('input[name="CarId"][value="@Model.Id"]').closest('.modal-content').querySelector('input[readonly]').value.replace(/[^0-9\,\.]/g, '').replace(',', '.'));
+
+        function updateTotalPrice() {
+            var start = new Date(startDateInput.value);
+            var end = new Date(endDateInput.value);
+            if (start && end && end > start) {
+                var days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                var total = days * pricePerDay;
+                totalPriceInput.value = total.toLocaleString('sv-SE', { style: 'currency', currency: 'SEK' });
+            } else {
+                totalPriceInput.value = pricePerDay.toLocaleString('sv-SE', { style: 'currency', currency: 'SEK' });
+            }
+        }
+        if (startDateInput && endDateInput) {
+            startDateInput.addEventListener('change', updateTotalPrice);
+            endDateInput.addEventListener('change', updateTotalPrice);
+        }
+    </script>
+}

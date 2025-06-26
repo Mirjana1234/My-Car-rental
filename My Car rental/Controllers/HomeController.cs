@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using My_Car_rental.Data;
 using My_Car_rental.Models;
 using System.Diagnostics;
+using System.Net.Mail;
+using System.Net;
 
 namespace My_Car_rental.Controllers
 {
@@ -70,6 +72,65 @@ namespace My_Car_rental.Controllers
 
             ViewBag.Message = $"You have successfully booked: {car.Brand} {car.Model} ({car.Year})!";
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BookModal(int CarId, string UserEmail, DateTime StartDate, DateTime EndDate, string TotalPrice)
+        {
+            var car = await _context.Cars.FindAsync(CarId);
+            if (car == null || !car.IsAvailable)
+            {
+                TempData["BookingError"] = "Car is not available.";
+                return RedirectToAction("Cars");
+            }
+
+            // Calculate price (parse from TotalPrice or recalculate)
+            var days = (EndDate - StartDate).Days + 1;
+            var price = car.PricePerDay * days;
+
+            // Save booking
+            var booking = new Booking
+            {
+                CarId = CarId,
+                UserId = User.Identity.IsAuthenticated ? User.Identity.Name : UserEmail,
+                StartDate = StartDate,
+                EndDate = EndDate,
+                Price = price,
+                Status = "Confirmed"
+            };
+            _context.Bookings.Add(booking);
+
+            // Update car status
+            car.IsAvailable = false;
+            car.Status = "Booked";
+            await _context.SaveChangesAsync();
+
+            // Send confirmation email
+            try
+            {
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("your-email@gmail.com", "your-app-password"),
+                    EnableSsl = true,
+                };
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress("your-email@gmail.com"),
+                    Subject = "Car Booking Confirmation",
+                    Body = $"Thank you for booking {car.Brand} {car.Model} from {StartDate:yyyy-MM-dd} to {EndDate:yyyy-MM-dd}. Total price: {price:C}.",
+                    IsBodyHtml = false,
+                };
+                mailMessage.To.Add(UserEmail);
+                await smtpClient.SendMailAsync(mailMessage);
+            }
+            catch
+            {
+                // Ignore email errors for now
+            }
+
+            TempData["BookingSuccess"] = $"Booking confirmed for {car.Brand} {car.Model}. Confirmation sent to {UserEmail}.";
+            return RedirectToAction("Cars");
         }
 
         public IActionResult Privacy()

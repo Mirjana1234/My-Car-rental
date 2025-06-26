@@ -1,0 +1,30 @@
+@model IEnumerable<My_Car_rental.Models.Booking>
+@{
+    ViewData["Title"] = "All Bookings";
+}
+<h2>All Bookings</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Car</th>
+            <th>User</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Price</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var booking in Model)
+    {
+        <tr>
+            <td>@(booking.Car != null ? $"{booking.Car.Brand} {booking.Car.Model}" : "-")</td>
+            <td>@booking.UserId</td>
+            <td>@booking.StartDate.ToShortDateString()</td>
+            <td>@booking.EndDate.ToShortDateString()</td>
+            <td>@booking.Price.ToString("C")</td>
+            <td>@booking.Status</td>
+        </tr>
+    }
+    </tbody>
+</table> 
